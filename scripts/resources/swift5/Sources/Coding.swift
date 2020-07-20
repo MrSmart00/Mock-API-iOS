@@ -2,7 +2,9 @@
 
 import Foundation
 
-public typealias File = Data
+{% for type, typealias in options.typeAliases %}
+public typealias {{ type }} = {{ typealias }}
+{% endfor %}
 
 public struct DateDay: Codable, Comparable {
 

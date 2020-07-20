@@ -12,6 +12,10 @@ options:
   modelInheritance: false # must be false for struct modelType
   modelNames: {}
   enumNames: {} # override enum type names
+  typeAliases:
+    ID: UUID
+    DateTime: Date
+    File: Data
   dependencies:
     - name: Moya
       pod: Moya/Moya
