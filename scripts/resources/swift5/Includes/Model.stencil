@@ -1,0 +1,67 @@
+{% if description %}
+/** {{ description }} */
+{% endif %}
+{% if enum %}
+{% include "Includes/Enum.stencil" enum %}
+{% elif aliasType %}
+public typealias {{ type }} = {{ aliasType }}
+{% elif additionalPropertiesType and allProperties.count == 0 %}
+public typealias {{ type }} = [String: {{ additionalPropertiesType }}]
+{% elif discriminatorType %}
+public enum {{ type }}: Codable, Equatable {
+    case missing
+    {% for subType in discriminatorType.subTypes %}
+    case {{ subType.name }}({{ subType.type }})
+    {% endfor %}
+    {% if options.enumUndecodableCase %}
+    case undecodable
+    {% endif %}
+
+    public init(from decoder: Decoder) throws {
+        {% for subType in discriminatorType.subTypes %}
+        if let value = try? {{ subType.type }}(from: decoder) {
+            self = .{{ subType.name }}(value)
+            return
+        }
+        {% endfor %}
+        self = .missing
+    }
+
+    public func encode(to encoder: Encoder) throws { }
+}
+{% else %}
+public {{ options.modelType }} {{ type }}: {% if parent %}{{ parent.type }}{% else %}{% if options.modelProtocol %}{{ options.modelProtocol }}{% else %}Codable, Equatable{% endif %}{% endif %} {
+    {% for enum in enums %}
+    {% if not enum.isGlobal %}
+
+    {% filter indent:4 %}{% include "Includes/Enum.stencil" enum %}{% endfilter %}
+    {% endif %}
+    {% endfor %}
+
+    {% if properties.count > 0 %}
+    private enum CodingKeys: String, CodingKey {
+        {% for property in properties %}
+        case {{ property.name }}{% if property.name != property.value %} = "{{ property.value }}"{% endif %}
+        {% endfor %}
+    }
+    {% endif %}
+
+    {% for property in properties %}
+
+    {% if property.description %}
+    /** {{ property.description }} */
+    {% endif %}
+    public {% if options.mutableModels %}var{% else %}let{% endif %} {{ property.name }}: {{ property.optionalType }}
+    {% endfor %}
+    {% for schema in schemas %}
+
+    {% filter indent:4 %}{% include "Includes/Model.stencil" schema %}{% endfilter %}
+    {% endfor %}
+
+    public init({% for property in allProperties %}{{ property.name }}: {{ property.optionalType }}{% ifnot property.required %} = nil{% endif %}{% ifnot forloop.last %}, {% endif %}{% endfor %}) {
+        {% for property in properties %}
+        self.{{ property.name }} = {{ property.name }}
+        {% endfor %}
+    }
+}
+{% endif %}

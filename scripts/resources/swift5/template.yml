@@ -1,0 +1,54 @@
+formatter: swift
+options:
+  name: MockAPI # the name of the API
+  baseURL: http://localhost:3200
+  fixedWidthIntegers: false # whether to use types like Int32 and Int64
+  mutableModels: false # whether model properties are mutable
+  safeOptionalDecoding: false # set invalid optionals to nil instead of throwing
+  safeArrayDecoding: false # filter out invalid items in array instead of throwing
+  modelPrefix: null # applied to model classes and enums
+  modelSuffix: null # applied to model classes
+  modelType: struct # can be struct or class
+  modelInheritance: false # must be false for struct modelType
+  modelNames: {}
+  enumNames: {} # override enum type names
+  dependencies:
+    - name: Moya
+      pod: Moya/Moya
+      version: 14.0.0
+templateFiles:
+  - path: README.md
+    destination: ../Doc/README.md
+  - path: Sources/API.swift
+    destination: API.swift
+  - path: Sources/APITargetType.swift
+    destination: APITargetType.swift
+  - path: Sources/Coding.swift
+    destination: Coding.swift
+  - path: Sources/AnyCodable.swift
+    destination: AnyCodable.swift
+  - path: Package.swift
+    destination: "../../Package.swift"
+  - path: Podspec.podspec
+    destination: "../../{{ options.name }}.podspec"
+  - path: Sources/enum.swift
+    context: enum
+    destination: "Enums/{{ enumName }}.swift"
+  - path: Sources/Model.swift
+    context: schemas
+    destination: "Models/{{ type }}.swift"
+  - path: Sources/NoContent.swift
+    destination: NoContent.swift
+  - path: Sources/APIRequest.swift
+    context: operations
+    destination: "Requests{% if tag %}/{{ tag|upperCamelCase }}{% endif %}/{{ type }}.swift"
+  - path: Sources/AbstractTarget.swift
+    destination: AbstractTarget.swift
+  - path: Sources/NetworkService.swift
+    destination: NetworkService.swift
+  - path: Sources/Moya+Combine/AnyPublisher+Response.swift
+    destination: Moya+Combine/AnyPublisher+Response.swift
+  - path: Sources/Moya+Combine/MoyaProvider+Combine.swift
+    destination: Moya+Combine/MoyaProvider+Combine.swift
+  - path: Sources/Moya+Combine/MoyaPublisher.swift
+    destination: Moya+Combine/MoyaPublisher.swift

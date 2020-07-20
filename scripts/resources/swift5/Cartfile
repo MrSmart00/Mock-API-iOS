@@ -1,0 +1,8 @@
+{% for dependency in options.dependencies %}
+{% if dependency.version %}
+github "{{ dependency.github }}" ~> {{ dependency.version }}
+{% endif %}
+{% if dependency.branch %}
+github "{{ dependency.github }}" "{{ dependency.branch }}"
+{% endif %}
+{% endfor %}

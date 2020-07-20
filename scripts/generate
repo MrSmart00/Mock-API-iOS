@@ -1,0 +1,10 @@
+#!/bin/bash
+
+ROOT=$(cd $(dirname $0)/../;pwd)
+
+rm -rf ${ROOT}/MockAPI.xcodeproj
+rm -rf ${ROOT}/Sources
+mint run MrSmart00/SwagGen swaggen generate openapi.json --template scripts/resources/swift5 --destination Sources/MockAPI
+mint run nicklockwood/SwiftFormat swiftformat Sources --swiftversion 5.1
+
+swift package generate-xcodeproj

@@ -1,0 +1,287 @@
+{
+  "openapi" : "3.0.3",
+  "info" : {
+    "title" : "Mock OpenAPI",
+    "description" : "API for Mock",
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "http://localhost",
+    "description" : "ローカル環境用"
+  } ],
+  "tags" : [ {
+    "name" : "Authorization"
+  }, {
+    "name" : "Me"
+  } ],
+  "paths" : {
+    "/signup" : {
+      "post" : {
+        "tags" : [ "Authorization" ],
+        "summary" : "サインアップ",
+        "description" : "サインアップ",
+        "operationId" : "postSignup",
+        "requestBody" : {
+          "description" : "signup parameters",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Credential"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessToken"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "標準エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "認証エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login" : {
+      "post" : {
+        "tags" : [ "Authorization" ],
+        "summary" : "ログイン",
+        "description" : "ログイン",
+        "operationId" : "postLogin",
+        "requestBody" : {
+          "description" : "signup parameters",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Credential"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessToken"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "標準エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "認証エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/me" : {
+      "get" : {
+        "tags" : [ "Me" ],
+        "summary" : "ユーザー情報を取得",
+        "description" : "ユーザー情報を取得",
+        "operationId" : "getMe",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "標準エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "認証エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "JWTAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "Me" ],
+        "summary" : "ユーザー情報を削除",
+        "description" : "ユーザー情報を削除",
+        "operationId" : "deleteMe",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "default" : {
+            "description" : "標準エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "認証エラー",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ServerError"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "JWTAuth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Credential" : {
+        "required" : [ "email", "password" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "format" : "email",
+            "example" : "mock@example.com"
+          },
+          "password" : {
+            "type" : "string",
+            "format" : "password",
+            "example" : "password1234"
+          }
+        }
+      },
+      "AccessToken" : {
+        "required" : [ "token" ],
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "type" : "string",
+            "description" : "アクセストークン",
+            "example" : "xxxaaabbb000111"
+          }
+        }
+      },
+      "ServerError" : {
+        "required" : [ "code", "message", "title" ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "integer",
+            "description" : "エラーコード",
+            "format" : "int32",
+            "example" : 400
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "エラー表示タイトル",
+            "example" : "不明なエラー"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "エラー表示メッセージ",
+            "example" : "データ取得に失敗しました"
+          }
+        }
+      },
+      "User" : {
+        "required" : [ "created_at", "email", "logged_in_at", "uuid" ],
+        "type" : "object",
+        "properties" : {
+          "email" : {
+            "type" : "string",
+            "description" : "ユーザーE-mail",
+            "format" : "email",
+            "example" : "mock@example.com"
+          },
+          "uuid" : {
+            "type" : "string",
+            "description" : "ユーザーID",
+            "format" : "uuid"
+          },
+          "created_at" : {
+            "type" : "string",
+            "description" : "アカウント作成日時",
+            "format" : "date-time",
+            "example" : "2017-07-21T17:32:28Z"
+          },
+          "logged_in_at" : {
+            "type" : "string",
+            "description" : "最終ログイン日時",
+            "format" : "date-time",
+            "example" : "2017-07-21T17:32:28Z"
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "JWTAuth" : {
+        "type" : "apiKey",
+        "name" : "Authorization",
+        "in" : "header"
+      }
+    }
+  }
+}
