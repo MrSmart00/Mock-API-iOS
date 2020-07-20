@@ -50,6 +50,8 @@ templateFiles:
     destination: AbstractTarget.swift
   - path: Sources/NetworkService.swift
     destination: NetworkService.swift
+  - path: Sources/TokenRepository.swift
+    destination: TokenRepository.swift
   - path: Sources/Moya+Combine/AnyPublisher+Response.swift
     destination: Moya+Combine/AnyPublisher+Response.swift
   - path: Sources/Moya+Combine/MoyaProvider+Combine.swift
