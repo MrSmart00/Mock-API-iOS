@@ -13,7 +13,7 @@ public protocol MockAPIBaseTargetType: TargetType {
 
 public extension MockAPIBaseTargetType {
     var baseURL: URL {
-        URL(string: "http://localhost:3200")!
+        URL(string: "http://127.0.0.1:3200")!
     }
 
     var headers: [String: String]? {
