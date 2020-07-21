@@ -1,7 +1,7 @@
 formatter: swift
 options:
   name: MockAPI # the name of the API
-  baseURL: http://127.0.0.1:3200
+  baseURL: http://127.0.0.1
   fixedWidthIntegers: false # whether to use types like Int32 and Int64
   mutableModels: false # whether model properties are mutable
   safeOptionalDecoding: false # set invalid optionals to nil instead of throwing

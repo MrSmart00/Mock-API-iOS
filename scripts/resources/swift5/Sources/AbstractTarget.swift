@@ -14,10 +14,10 @@ private func JSONResponseDataFormatter(data: Data) -> Data {
 }
 
 public enum AbstractTarget: TargetType {
-    case target(TargetType, Data)
+    case target(TargetType, Data, URL?)
 
-    public init(_ target: TargetType, _ data: Data = .init()) {
-        self = .target(target, data)
+    public init(_ target: TargetType, _ data: Data = .init(), _ baseURL: URL? = nil) {
+        self = .target(target, data, baseURL)
     }
 
     public var path: String {
@@ -25,7 +25,9 @@ public enum AbstractTarget: TargetType {
     }
 
     public var baseURL: URL {
-        target.baseURL
+        switch self {
+        case let .target(_, _, url): return url ?? target.baseURL
+        }
     }
 
     public var method: Moya.Method {
@@ -34,7 +36,7 @@ public enum AbstractTarget: TargetType {
 
     public var sampleData: Data {
         switch self {
-        case let .target(_, data): return data
+        case let .target(_, data, _): return data
         }
     }
 
@@ -52,7 +54,7 @@ public enum AbstractTarget: TargetType {
 
     public var target: TargetType {
         switch self {
-        case let .target(target, _): return target
+        case let .target(target, _, _): return target
         }
     }
 }

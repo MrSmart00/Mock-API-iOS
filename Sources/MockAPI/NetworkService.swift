@@ -189,17 +189,19 @@ public class NetworkService: NetworkServiceType {
     }
 
     private let provider: MoyaProvider<AbstractTarget>
+    private let baseURL: URL?
 
-    public init() {
+    public init(baseURL: URL? = nil) {
         let provider = MoyaProvider<AbstractTarget>(
             plugins: [
                 loggingPlugin(),
             ]
         )
         self.provider = provider
+        self.baseURL = baseURL
     }
 
-    public init(accessTokenRepository: TokenRepositoryType, refreshTokenHandler: RefreshTokenHandler? = nil) {
+    public init(baseURL: URL? = nil, accessTokenRepository: TokenRepositoryType, refreshTokenHandler: RefreshTokenHandler? = nil) {
         let handler = OAuthHandler(accessTokenRepository: accessTokenRepository, refreshTokenHandler: refreshTokenHandler)
         let provider = MoyaProvider<AbstractTarget>(
             session: .init(interceptor: handler),
@@ -208,10 +210,11 @@ public class NetworkService: NetworkServiceType {
             ]
         )
         self.provider = provider
+        self.baseURL = baseURL
     }
 
     public func request<R>(_ target: R) -> AnyPublisher<R.Response, APIError> where R: MockAPIBaseTargetType, R.Response: Decodable {
-        let target = AbstractTarget(target)
+        let target = AbstractTarget(target, .init(), baseURL)
         return provider.requestPublisher(target)
             .map(R.Response.self, failsOnEmptyData: false)
             .mapError(APIError.init)
